@@ -4,7 +4,11 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { assertNoBundledFontFiles, collectSourceFiles } from "./source-package-policy.mjs";
+import {
+  assertNoBundledFontFiles,
+  assertPublicSourceCleanliness,
+  collectSourceFiles
+} from "./source-package-policy.mjs";
 
 const rootDir = fileURLToPath(new URL("../", import.meta.url));
 const packageJson = JSON.parse(await readFile(join(rootDir, "package.json"), "utf8"));
@@ -26,6 +30,7 @@ if (!force && (existsSync(outputPath) || existsSync(checksumPath))) {
 
 const sourceFiles = await collectSourceFiles(rootDir);
 await assertNoBundledFontFiles(rootDir, sourceFiles);
+await assertPublicSourceCleanliness(rootDir, sourceFiles);
 
 const moduleRef = { exports: {} };
 const context = {

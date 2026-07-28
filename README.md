@@ -4,7 +4,7 @@ An open-source, local-first workspace for AI image creation, product asset manag
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24-339933.svg)](./package.json)
-[![Release](https://img.shields.io/badge/release-preview-orange.svg)](./OPEN_SOURCE_RELEASE_CHECKLIST.md)
+[![Release](https://img.shields.io/badge/release-preview-orange.svg)](./package.json)
 
 **Languages:** [English](./README.md) · [简体中文](./docs/i18n/README.zh-CN.md) · [日本語](./docs/i18n/README.ja.md) · [한국어](./docs/i18n/README.ko.md) · [Español](./docs/i18n/README.es.md) · [Português](./docs/i18n/README.pt-BR.md) · [Français](./docs/i18n/README.fr.md) · [Deutsch](./docs/i18n/README.de.md) · [Русский](./docs/i18n/README.ru.md) · [العربية](./docs/i18n/README.ar.md)
 
@@ -25,7 +25,7 @@ The cloud layer is deliberately optional: local storage remains the source of tr
 - **User-selected image models** — each user can maintain a browser-local list of model names; service endpoints and credentials stay administrator-controlled.
 - **Local-first persistence** — conversations, canvas projects, and local assets are written to `runtime/` on the appliance.
 - **Optional cloud backup** — reuse generic S3-compatible object storage without binding the runtime to a vendor.
-- **Open-source boundaries** — Apache-2.0 license, third-party notices, security guidance, and a release checklist are included.
+- **Open-source boundaries** — Apache-2.0 license, third-party notices, and security guidance are included.
 
 ## Product tour and cases
 
@@ -86,6 +86,7 @@ npm test
 
 ```bash
 npm run check:fonts
+npm run check:clean
 npm run package:source
 ```
 
@@ -161,7 +162,6 @@ The cloud copy is a backup record. The employee workspace continues to read from
 - [Privacy and data deletion](./PRIVACY.md)
 - [Acceptable-use and generated-content rules](./ACCEPTABLE_USE.md)
 - [Ownership and provenance record](./OWNERSHIP_PROVENANCE.md)
-- [Open-source release checklist](./OPEN_SOURCE_RELEASE_CHECKLIST.md)
 - [Apache-2.0 license](./LICENSE)
 
 ## Current limitations

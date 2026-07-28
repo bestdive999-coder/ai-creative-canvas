@@ -68,7 +68,7 @@ test("local Windows administrator must retype the one-time code and phrase", () 
 });
 
 test("admin UI clearly separates remote request from local confirmation", () => {
-  assert.match(adminHtml, /open-source-preview-21/);
+  assert.match(adminHtml, /open-source-preview-22/);
   assert.match(adminApp, /发起彻底卸载/);
   assert.match(adminApp, /Confirm-Full-Uninstall-Admin\.bat/);
   assert.match(adminApp, /data-uninstall-password/);

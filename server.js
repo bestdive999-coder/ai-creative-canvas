@@ -661,8 +661,8 @@ function defaultIntranetConfig() {
       imagePricing: defaultImagePricingConfig()
     },
     updates: {
-      currentVersion: "0.1.0-preview.21",
-      latestVersion: "0.1.0-preview.21",
+      currentVersion: "0.1.0-preview.22",
+      latestVersion: "0.1.0-preview.22",
       packageUrl: "",
       releaseNote: "",
       forceUpdate: false

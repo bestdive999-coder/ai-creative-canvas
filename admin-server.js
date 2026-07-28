@@ -1326,8 +1326,8 @@ function defaultIntranetConfig() {
       imagePricing: defaultImagePricingConfig()
     },
     updates: {
-      currentVersion: "0.1.0-preview.21",
-      latestVersion: "0.1.0-preview.21",
+      currentVersion: "0.1.0-preview.22",
+      latestVersion: "0.1.0-preview.22",
       packageUrl: "",
       releaseNote: "",
       forceUpdate: false
@@ -3052,7 +3052,7 @@ async function handleAdminConfig(req, res) {
     };
     nextSeed.updates = {
       ...current.updates,
-      currentVersion: String(updatesBody.currentVersion ?? current.updates.currentVersion ?? "0.1.0-preview.21").trim(),
+      currentVersion: String(updatesBody.currentVersion ?? current.updates.currentVersion ?? "0.1.0-preview.22").trim(),
       latestVersion: String(updatesBody.latestVersion ?? current.updates.latestVersion ?? "").trim(),
       packageUrl: String(updatesBody.packageUrl ?? current.updates.packageUrl ?? "").trim(),
       releaseNote: String(updatesBody.releaseNote ?? current.updates.releaseNote ?? "").trim(),

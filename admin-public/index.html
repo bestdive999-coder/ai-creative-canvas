@@ -1,0 +1,84 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>内网管理员中控</title>
+    <link rel="stylesheet" href="./styles.css?v=open-source-preview-21" />
+    <script src="./text-translations.js?v=open-source-preview-21"></script>
+    <script src="./i18n.js?v=open-source-preview-21"></script>
+  </head>
+  <body class="admin-login-locked">
+    <div class="admin-shell">
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <h1 data-i18n="adminConsole">内网管理员中控</h1>
+            <p id="summaryLine">登录后查看内网运行状态。</p>
+          </div>
+        </div>
+
+        <div class="admin-session">
+          <span id="adminStatus">未登录</span>
+          <div class="admin-profile">
+            <strong id="adminName">请登录</strong>
+            <small id="adminRole">Admin Console</small>
+          </div>
+          <a id="employeeLink" class="secondary" href="http://localhost:5173" target="_blank" rel="noreferrer" data-i18n="employee">员工端</a>
+          <label class="locale-picker"><span class="sr-only" data-i18n="language">语言</span><select id="appLanguageSelect" aria-label="语言" data-i18n-aria-label="language"></select></label>
+          <button id="refreshBtn" class="primary" type="button" data-i18n="refresh">刷新</button>
+          <button id="logoutBtn" class="secondary" type="button" data-i18n="logout">退出</button>
+        </div>
+      </header>
+
+      <div class="admin-workspace">
+        <nav class="admin-module-rail" aria-label="管理员模块">
+          <button class="active" type="button" data-admin-module="overview"><span data-i18n="overview">总览</span><small data-i18n="operations">运营</small></button>
+          <button type="button" data-admin-module="accounts"><span data-i18n="accounts">账户</span><small data-i18n="authorization">授权</small></button>
+          <button type="button" data-admin-module="usage"><span data-i18n="usage">用量</span><small data-i18n="statistics">统计</small></button>
+          <button type="button" data-admin-module="feedback"><span data-i18n="feedback">反馈</span><small data-i18n="issues">吐槽</small></button>
+          <button type="button" data-admin-module="ai"><span>AI</span><small data-i18n="models">模型</small></button>
+          <button type="button" data-admin-module="diagnostics"><span data-i18n="health">体检</span><small data-i18n="status">状态</small></button>
+          <button type="button" data-admin-module="system"><span data-i18n="system">系统</span><small data-i18n="intranet">内网</small></button>
+        </nav>
+
+        <main class="admin-main">
+          <section id="overview" class="overview empty-state">管理员登录后显示中控数据</section>
+        </main>
+      </div>
+    </div>
+
+    <div id="loginOverlay" class="login-overlay">
+      <form id="loginForm" class="login-card">
+        <div class="login-card-head">
+          <div>
+            <span id="loginKicker" class="kicker">ADMIN LOGIN</span>
+            <h2 id="loginTitle" data-i18n="adminLogin">登录管理员中控</h2>
+          </div>
+          <label class="locale-picker login-locale-picker">
+            <span class="sr-only" data-i18n="language">语言</span>
+            <select id="loginLanguageSelect" aria-label="语言" data-i18n-aria-label="language"></select>
+          </label>
+        </div>
+        <label>
+          <span data-i18n="username">账号</span>
+          <input id="username" type="text" autocomplete="username" placeholder="请输入中控台账号" data-i18n-placeholder="username" />
+        </label>
+        <label>
+          <span data-i18n="password">密码</span>
+          <input id="password" type="password" autocomplete="current-password" placeholder="请输入密码" data-i18n-placeholder="password" />
+        </label>
+        <label id="confirmPasswordWrap" class="hidden">
+          <span data-i18n="confirmPassword">确认密码</span>
+          <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="再次输入密码" data-i18n-placeholder="confirmPassword" />
+        </label>
+        <p id="loginError"></p>
+        <button id="loginSubmit" class="primary full" type="submit" data-i18n="login">登录</button>
+      </form>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="./app.js?v=open-source-preview-21"></script>
+  </body>
+</html>

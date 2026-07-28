@@ -1,0 +1,19 @@
+{
+  "name": "ecommerce-canvas-ai-workbench",
+  "version": "0.1.0-preview.21",
+  "private": true,
+  "description": "Sanitized open-source preview of an e-commerce AI creation workbench.",
+  "author": "zk",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "admin": "node admin-server.js",
+    "test": "node --test tests/*.test.mjs",
+    "check:fonts": "node scripts/check-font-distribution.mjs",
+    "package:source": "node scripts/package-source.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

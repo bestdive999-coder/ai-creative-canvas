@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>电商 AI 画布</title>
+    <link rel="stylesheet" href="./styles.css?v=open-source-preview-21" />
+    <script src="./src/text-translations.js?v=open-source-preview-21"></script>
+    <script src="./src/i18n.js?v=open-source-preview-21"></script>
+    <script src="./vendor/xlsx.full.min.js?v=0.20.3"></script>
+    <script src="./vendor/jszip.min.js?v=3.10.1"></script>
+  </head>
+  <body class="workspace-mode canvas-layer-panel-closed">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <nav class="workflow-tabs app-switcher" aria-label="应用" data-i18n-aria-label="application">
+          <button class="tab-btn app-switcher-item active" type="button" data-workflow="direct">
+            <span class="app-switcher-icon">AI</span>
+            <b data-i18n="productName">AI 创作画布</b>
+            <small data-i18n="productTagline">生图 / 画布 / 素材</small>
+          </button>
+        </nav>
+
+        <section class="panel account-panel">
+          <div class="panel-head">
+            <h2 data-i18n="accountAuth">账户授权</h2>
+            <span id="accountStatus" class="status-dot pending" data-i18n="notLoggedIn">未登录</span>
+          </div>
+          <div class="account-card">
+            <div>
+              <b id="accountName" data-i18n="login">请登录</b>
+              <span id="accountPlan" class="muted" data-i18n="loginAfter">登录后记录使用次数</span>
+            </div>
+          </div>
+          <div class="usage-stack">
+            <div class="usage-row">
+              <span data-i18n="aiImage">AI 生图</span>
+              <b id="usageAiImages">0/0</b>
+            </div>
+            <div class="usage-row">
+              <span data-i18n="aiCopy">AI 文案</span>
+              <b id="usageCopywriting">0/0</b>
+            </div>
+          </div>
+        </section>
+
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <span class="topbar-kicker">Creative Workspace</span>
+            <h2 data-i18n="productName">电商 AI 画布</h2>
+            <p id="summaryLine">AI 生图、素材管理和无限画布集中在同一个工作区。</p>
+          </div>
+          <div class="topbar-metrics" aria-label="当前状态" data-i18n-aria-label="currentState">
+            <div>
+              <span data-i18n="workspace">工作区</span>
+              <b id="activeWorkflowName" data-i18n="productName">AI 创作画布</b>
+            </div>
+            <div>
+              <span data-i18n="status">状态</span>
+              <b data-i18n="localRun">本地运行</b>
+            </div>
+          </div>
+        </header>
+
+        <section id="directWorkflow" class="workflow-section active" data-workflow-panel="direct">
+          <section class="studio-workspace-shell">
+            <input id="canvasAssetInput" class="studio-hidden-input" type="file" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml,.png,.jpg,.jpeg,.webp,.svg" multiple />
+
+            <div class="studio-project-bar" aria-label="项目栏" data-i18n-aria-label="projectBar">
+              <span class="workspace-brand-word" data-i18n="productName">电商 AI 画布</span>
+              <input id="canvasProjectName" class="studio-project-name" type="text" placeholder="未保存项目" value="未保存项目" data-i18n-placeholder="unsavedProject" data-i18n-value="unsavedProject" />
+              <span class="workspace-save-state"><span class="workspace-status-dot"></span><span data-i18n="autoSaved">已自动保存</span></span>
+              <button id="canvasNewProjectBtn" class="studio-text-button" type="button" data-i18n="new">新建</button>
+              <button id="canvasSaveProjectBtn" class="studio-text-button strong" type="button" data-i18n="save">保存</button>
+              <label class="locale-picker project-locale-picker">
+                <span class="sr-only" data-i18n="language">语言</span>
+                <select id="appLanguageSelect" aria-label="语言" data-i18n-aria-label="language"></select>
+              </label>
+            </div>
+
+            <div class="studio-zoom-pill" aria-label="画布缩放" data-i18n-aria-label="canvasZoom">
+              <button id="canvasZoomOutBtn" type="button">-</button>
+              <button id="canvasFitBtn" type="button" title="适配当前画板" data-i18n-title="fitCanvas">35%</button>
+              <button id="canvasZoomInBtn" type="button">+</button>
+            </div>
+
+            <aside id="canvasLayerPanel" class="studio-canvas-layer-panel" aria-label="图层" data-i18n-aria-label="layers">
+              <header class="canvas-layer-panel-head">
+                <b data-i18n="layers">图层</b>
+                <button id="canvasLayerPanelCloseBtn" type="button" aria-label="关闭" data-i18n-aria-label="close">×</button>
+              </header>
+              <section class="canvas-history-block">
+                <button id="canvasLayerHistoryToggleBtn" class="canvas-history-toggle" type="button" aria-expanded="true">
+                  <span data-i18n="history">历史记录</span>
+                  <span aria-hidden="true">⌃</span>
+                </button>
+                <div id="canvasLayerHistoryBody" class="canvas-history-empty">
+                  <span class="canvas-history-empty-icon" aria-hidden="true"></span>
+                  <span data-i18n="noHistory">暂无历史记录</span>
+                </div>
+              </section>
+              <div id="canvasSidebarLayerList" class="canvas-sidebar-layer-list empty-state" data-i18n="noLayers">暂无图层</div>
+            </aside>
+
+            <nav class="studio-left-toolbar" aria-label="画布工具" data-i18n-aria-label="canvasTools">
+              <div class="studio-tool-group">
+                <button id="canvasSelectBtn" class="studio-tool active" type="button" title="选择" data-i18n-title="select" data-tooltip="选择" data-i18n-tooltip="select"><span class="tool-icon workspace-icon ri-pointer" aria-hidden="true"></span></button>
+                <div class="studio-flyout menu-flyout">
+                  <button type="button" data-tool-mode="select"><span class="workspace-icon ri-pointer" aria-hidden="true"></span><b data-i18n="select">选择</b><em>V</em></button>
+                  <button type="button" data-tool-mode="pan"><span class="workspace-icon ri-hand" aria-hidden="true"></span><b data-i18n="pan">平移画布</b><em>H</em></button>
+                </div>
+              </div>
+              <div class="studio-tool-group">
+                <button id="canvasNewToolBtn" class="studio-tool" type="button" title="新增" data-i18n-title="add" data-tooltip="新增" data-i18n-tooltip="add"><span class="tool-icon workspace-icon ri-plus-square" aria-hidden="true"></span></button>
+                <div class="studio-flyout menu-flyout">
+                  <button id="canvasUploadAssetMenuBtn" type="button" data-canvas-upload="asset"><span class="workspace-icon ri-image" aria-hidden="true"></span><b data-i18n="uploadImage">上传图片</b></button>
+                  <button type="button" data-canvas-frame="800x800"><span class="workspace-icon ri-frame" aria-hidden="true"></span><b data-i18n="mainImageBoard">主图画板</b><em>800</em></button>
+                  <button type="button" data-canvas-frame="1080x1920"><span class="workspace-icon ri-layout" aria-hidden="true"></span><b data-i18n="poster">竖版海报</b><em>9:16</em></button>
+                  <button type="button" data-canvas-frame="750x3600"><span class="workspace-icon ri-layout" aria-hidden="true"></span><b data-i18n="detailLongImage">详情长图</b><em>750</em></button>
+                </div>
+              </div>
+              <div class="studio-tool-group">
+                <button id="canvasShapeToolBtn" class="studio-tool" type="button" title="形状" data-i18n-title="shape" data-tooltip="形状" data-i18n-tooltip="shape"><span class="tool-icon workspace-icon ri-square" aria-hidden="true"></span></button>
+                <div class="studio-flyout shape-flyout">
+                  <b data-i18n="shape">形状</b>
+                  <div>
+                    <button type="button" data-canvas-shape="rect">□</button>
+                    <button type="button" data-canvas-shape="circle">○</button>
+                    <button type="button" data-canvas-shape="triangle">△</button>
+                    <button type="button" data-canvas-shape="star">☆</button>
+                  </div>
+                  <b data-i18n="shapeText">形状文本</b>
+                  <div>
+                    <button type="button" data-canvas-shape="badge">▢</button>
+                    <button type="button" data-canvas-shape="pill">▭</button>
+                    <button type="button" data-canvas-shape="bubble">▱</button>
+                  </div>
+                </div>
+              </div>
+              <button id="canvasAddTextBtn" class="studio-tool" type="button" title="文字" data-i18n-title="text" data-tooltip="文字" data-i18n-tooltip="text"><span class="tool-icon">T</span></button>
+              <div class="studio-tool-group">
+                <button id="canvasDrawToolBtn" class="studio-tool" type="button" title="画笔" data-i18n-title="brush" data-tooltip="画笔" data-i18n-tooltip="brush"><span class="tool-icon workspace-icon ri-pen" aria-hidden="true"></span></button>
+                <div class="studio-flyout menu-flyout slim">
+                  <button type="button" data-tool-mode="pencil"><span class="workspace-icon ri-pen" aria-hidden="true"></span><b data-i18n="pencil">铅笔</b><em>Shift + P</em></button>
+                  <button type="button" data-tool-mode="pen"><span class="workspace-icon ri-pen-tool" aria-hidden="true"></span><b data-i18n="pen">钢笔</b><em>P</em></button>
+                </div>
+              </div>
+              <button id="canvasUploadAssetToolBtn" class="studio-tool file-tool" type="button" title="上传图片" data-i18n-title="uploadImage" data-tooltip="上传图片" data-i18n-tooltip="uploadImage"><span class="tool-icon workspace-icon ri-image" aria-hidden="true"></span></button>
+              <span class="studio-tool-divider" aria-hidden="true"></span>
+              <button class="studio-tool" type="button" title="复制" data-i18n-title="copy" data-tooltip="复制选中元素" data-i18n-tooltip="copySelected" id="canvasDuplicateBtn"><span class="tool-icon workspace-icon ri-copy" aria-hidden="true"></span></button>
+              <button id="canvasDeleteBtn" class="studio-tool danger" type="button" title="删除" data-i18n-title="delete" data-tooltip="删除选中元素" data-i18n-tooltip="delete"><span class="tool-icon workspace-icon ri-trash" aria-hidden="true"></span></button>
+            </nav>
+
+            <main class="studio-canvas-main">
+              <div id="canvasStageWrap" class="canvas-stage-wrap studio-stage-wrap">
+                <canvas id="designCanvas" width="1400" height="900"></canvas>
+                <div id="canvasFrameLabels" class="canvas-frame-label-layer" aria-hidden="true"></div>
+                <aside id="canvasPerformancePanel" class="canvas-performance-panel" aria-label="画布性能" data-i18n-aria-label="canvasPerformance" hidden></aside>
+                <div id="canvasObjectToolbar" class="canvas-object-toolbar" hidden>
+                  <button type="button" data-canvas-object-action="remove-bg" data-i18n="removeBackground">移除背景</button>
+                  <button type="button" data-canvas-object-action="remove-bg-fine" data-i18n="fineCutout">精细抠图</button>
+                  <button type="button" data-canvas-object-action="erase" data-i18n="erase">擦除</button>
+                  <button type="button" data-canvas-object-action="expand" data-i18n="expand">扩展</button>
+                  <button type="button" data-canvas-object-action="download" data-i18n="download">下载</button>
+                </div>
+                <div id="canvasImageAiEditor" class="canvas-image-ai-editor" hidden>
+                  <div class="canvas-image-ai-head">
+                    <div class="canvas-image-ai-titleline">
+                      <b data-i18n="continueImage">续改图片</b>
+                      <span id="canvasImageAiMeta" class="composer-model-summary"><span data-i18n="continueImage">续改图片</span> · <span data-i18n="imageService">图片服务</span> · <span data-i18n="sourceDimensions">原图尺寸</span></span>
+                    </div>
+                    <button id="canvasImageAiCloseBtn" type="button" aria-label="收起 AI 修改" data-i18n-aria-label="closeAiEdit">×</button>
+                  </div>
+                  <div class="canvas-image-ai-box">
+                    <div id="canvasImageAiSettingsPanel" class="canvas-image-ai-popover canvas-image-ai-settings-panel" hidden>
+                      <div class="composer-popover-head">
+                        <b data-i18n="sizeQuality">尺寸和质量</b>
+                        <button class="composer-popover-close" type="button" data-canvas-image-ai-close="settings" aria-label="关闭" data-i18n-aria-label="close">&times;</button>
+                      </div>
+                      <div class="studio-setting-group">
+                        <b data-i18n="quality">清晰度</b>
+                        <div class="studio-segmented" role="group" aria-label="画布续改图片质量" data-i18n-aria-label="imageQuality">
+                          <button type="button" data-canvas-image-ai-quality="auto" data-i18n="auto">自动</button>
+                          <button type="button" data-canvas-image-ai-quality="high">4K</button>
+                          <button type="button" data-canvas-image-ai-quality="medium">2K</button>
+                          <button type="button" data-canvas-image-ai-quality="low">1K</button>
+                        </div>
+                      </div>
+                      <div class="studio-setting-group">
+                        <b data-i18n="ratio">比例</b>
+                        <div class="studio-size-inputs">
+                          <label>
+                            <span>W</span>
+                            <input id="canvasImageAiWidthInput" type="number" min="16" max="12000" step="1" value="1024" />
+                          </label>
+                          <span class="size-link" aria-hidden="true">↔</span>
+                          <label>
+                            <span>H</span>
+                            <input id="canvasImageAiHeightInput" type="number" min="16" max="12000" step="1" value="1024" />
+                          </label>
+                        </div>
+                        <p class="studio-auto-size-note" data-i18n="autoEditSizeNote">自动：按当前选中图比例续改，超大图会安全降尺寸；自定义后只影响画布续改。</p>
+                        <div class="studio-ratio-grid" aria-label="画布续改比例" data-i18n-aria-label="generationRatio">
+                          <button type="button" data-canvas-image-ai-ratio="1:1"><span></span><b>1:1</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="3:2"><span></span><b>3:2</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="2:3"><span></span><b>2:3</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="4:3"><span></span><b>4:3</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="3:4"><span></span><b>3:4</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="16:9"><span></span><b>16:9</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="9:16"><span></span><b>9:16</b></button>
+                          <button type="button" data-canvas-image-ai-ratio="auto"><span></span><b data-i18n="auto">自动</b></button>
+                        </div>
+                      </div>
+                      <div class="studio-setting-group">
+                        <b data-i18n="count">张数</b>
+                        <div class="studio-count-grid" aria-label="画布续改生成张数" data-i18n-aria-label="generationCount">
+                          <button type="button" data-canvas-image-ai-count="1" data-i18n-count="1">1 张</button>
+                          <button type="button" data-canvas-image-ai-count="2" data-i18n-count="2">2 张</button>
+                          <button type="button" data-canvas-image-ai-count="3" data-i18n-count="3">3 张</button>
+                          <button type="button" data-canvas-image-ai-count="4" data-i18n-count="4">4 张</button>
+                          <button type="button" data-canvas-image-ai-count="5" data-i18n-count="5">5 张</button>
+                          <button type="button" data-canvas-image-ai-count="6" data-i18n-count="6">6 张</button>
+                          <button type="button" data-canvas-image-ai-count="7" data-i18n-count="7">7 张</button>
+                          <button type="button" data-canvas-image-ai-count="8" data-i18n-count="8">8 张</button>
+                          <button type="button" data-canvas-image-ai-count="9" data-i18n-count="9">9 张</button>
+                          <button type="button" data-canvas-image-ai-count="10" data-i18n-count="10">10 张</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="canvasImageAiModelPanel" class="canvas-image-ai-popover canvas-image-ai-model-panel" hidden>
+                      <div class="studio-model-head composer-popover-head">
+                        <b data-i18n="preferences">偏好</b>
+                        <div class="studio-model-head-actions">
+                          <label class="studio-auto-toggle">
+                            <span data-i18n="auto">自动</span>
+                            <input id="canvasImageAiAutoModeToggle" type="checkbox" checked />
+                          </label>
+                          <button class="composer-popover-close" type="button" data-canvas-image-ai-close="model" aria-label="关闭" data-i18n-aria-label="close">&times;</button>
+                        </div>
+                      </div>
+                      <div class="studio-model-tabs" role="tablist" aria-label="画布续改模型类型" data-i18n-aria-label="modelType">
+                        <button class="active" type="button" data-canvas-image-ai-model-tab="image">Image</button>
+                        <button type="button" data-canvas-image-ai-model-tab="video">Video</button>
+                        <button type="button" data-canvas-image-ai-model-tab="3d">3D</button>
+                      </div>
+                      <div class="studio-model-list" data-canvas-image-ai-model-list="image">
+                        <button type="button" data-canvas-image-ai-model-preset="imageservice:auto">
+                          <b><span data-i18n="imageService">图片服务</span> <span data-i18n="auto">自动</span></b>
+                          <span>Standard Thinking</span>
+                          <em>30s</em>
+                        </button>
+                        <button type="button" data-canvas-image-ai-model-preset="imageservice:low">
+                          <b><span data-i18n="imageService">图片服务</span> <span data-i18n="lowQuality">低清</span></b>
+                          <span>No Thinking</span>
+                          <em>30s</em>
+                        </button>
+                        <button type="button" data-canvas-image-ai-model-preset="imageservice:medium">
+                          <b><span data-i18n="imageService">图片服务</span> <span data-i18n="standard">标准</span></b>
+                          <span>Standard Thinking</span>
+                          <em>30s</em>
+                        </button>
+                        <button type="button" data-canvas-image-ai-model-preset="imageservice:medium-deep">
+                          <b><span data-i18n="imageService">图片服务</span> <span data-i18n="deep">深度</span></b>
+                          <span>Deep Thinking</span>
+                          <em>45s</em>
+                        </button>
+                      </div>
+                      <div class="studio-model-list" data-canvas-image-ai-model-list="video" hidden>
+                        <button type="button" disabled>
+                          <b>Video Skill</b>
+                          <span data-i18n="currentProjectEditChain">当前项目先接图片续改链路。</span>
+                          <em>--</em>
+                        </button>
+                      </div>
+                      <div class="studio-model-list" data-canvas-image-ai-model-list="3d" hidden>
+                        <button type="button" disabled>
+                          <b>3D Skill</b>
+                          <span data-i18n="currentProjectEditChain">当前项目先接图片续改链路。</span>
+                          <em>--</em>
+                        </button>
+                      </div>
+                    </div>
+                    <div id="canvasImageAiReferenceList" class="canvas-image-ai-reference-list" hidden></div>
+                    <textarea id="canvasImageAiPrompt" rows="2" placeholder="描述修改要求" data-i18n-placeholder="editInstruction"></textarea>
+                    <div class="canvas-image-ai-actions">
+                      <div class="canvas-image-ai-left-actions">
+                        <button id="canvasImageAiAddRefBtn" class="canvas-image-ai-add-ref" type="button" title="添加参考图" aria-label="添加参考图" data-i18n-title="addReference" data-i18n-aria-label="addReference">
+                          <span class="workspace-icon ri-plus" aria-hidden="true"></span>
+                        </button>
+                        <input id="canvasImageAiReferenceInput" class="canvas-image-ai-reference-input" type="file" accept="image/png,image/jpeg" multiple />
+                        <button id="canvasImageAiWebSearchBtn" class="canvas-image-ai-tool-button" type="button" aria-pressed="false" title="联网搜索" data-i18n-title="webSearch"><span class="workspace-icon ri-search" aria-hidden="true"></span></button>
+                      </div>
+                      <div class="canvas-image-ai-right-actions">
+                        <button id="canvasImageAiModelPrefsBtn" class="canvas-image-ai-tool-button" type="button" title="模型偏好" data-i18n-title="modelPreferences"><span class="workspace-icon ri-gem" aria-hidden="true"></span></button>
+                        <button id="canvasImageAiSettingsBtn" class="canvas-image-ai-tool-button" type="button" title="尺寸和质量" data-i18n-title="sizeQuality"><span class="workspace-icon ri-sliders" aria-hidden="true"></span></button>
+                        <span class="canvas-image-ai-result-hint" data-i18n="beside">到旁边</span>
+                        <button id="canvasImageAiSendBtn" class="canvas-image-ai-send" type="button" aria-label="生成到当前图旁边" title="生成到当前图旁边" data-i18n-aria-label="generateBeside" data-i18n-title="generateBeside"><span class="workspace-icon ri-arrow-up" aria-hidden="true"></span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="canvasContextMenu" class="canvas-context-menu" hidden>
+                  <button type="button" data-canvas-context-action="copy"><span data-i18n="copy">复制</span><small>Ctrl + C</small></button>
+                  <button type="button" data-canvas-context-action="paste"><span data-i18n="paste">粘贴</span><small>Ctrl + V</small></button>
+                  <button type="button" data-canvas-context-action="remove-bg"><span data-i18n="removeBackground">移除背景</span><small data-i18n="fast">快速</small></button>
+                  <button type="button" data-canvas-context-action="remove-bg-fine"><span data-i18n="fineCutout">精细抠图</span><small data-i18n="moreAccurate">更准</small></button>
+                  <hr>
+                  <button type="button" data-canvas-context-action="send-to-chat"><span data-i18n="aiContinue">AI 续改</span><small data-i18n="imageOne">图1</small></button>
+                  <button type="button" data-canvas-context-action="group"><span data-i18n="createGroup">创建编组</span><small>Ctrl + G</small></button>
+                  <hr>
+                  <button type="button" data-canvas-context-action="toggle-visible"><span data-i18n="toggleVisibility">显示/隐藏</span><small>Shift + Ctrl + H</small></button>
+                  <button type="button" data-canvas-context-action="toggle-lock"><span data-i18n="toggleLock">锁定/解锁</span><small>Shift + Ctrl + L</small></button>
+                  <button type="button" data-canvas-context-action="delete" class="danger"><span data-i18n="delete">删除</span></button>
+                </div>
+              </div>
+            </main>
+
+            <div class="studio-bottom-status">
+              <button id="canvasLayerPanelToggleBtn" class="status-layers" type="button" title="图层" data-i18n-title="layers"><span class="workspace-icon ri-layers" aria-hidden="true"></span></button>
+              <button id="canvasPerformanceToggleBtn" class="status-performance" type="button" title="画布性能" data-i18n-title="canvasPerformance" data-i18n="performance">性能</button>
+              <span id="canvasStatus" class="muted" data-i18n="infiniteCanvas">无限画布 BETA 1.0</span>
+            </div>
+
+            <aside class="canvas-floating-assets studio-floating-assets" aria-label="画布快捷素材" data-i18n-aria-label="canvasQuickAssets">
+              <div class="canvas-floating-assets-head">
+                <b data-i18n="assets">素材</b>
+                <span class="muted" data-i18n="drag">拖拽</span>
+              </div>
+              <div id="canvasFloatingAssetList" class="canvas-floating-asset-list empty-state" data-i18n="noAssets">暂无素材</div>
+            </aside>
+
+            <aside id="studioAiPanel" class="studio-ai-panel" aria-label="AI 设计师面板" data-i18n-aria-label="aiDesignerPanel" data-active-panel="ai">
+              <div class="studio-panel-top-icons">
+                <button type="button" data-studio-panel="ai" class="active" data-i18n="create">创作</button>
+                <button type="button" data-studio-panel="history"><span data-i18n="tasks">任务</span><span id="studioTaskBadge" class="studio-panel-badge" hidden>0</span></button>
+                <button type="button" data-studio-panel="assets"><span data-i18n="assets">素材</span><span id="studioAssetBadge" class="studio-panel-badge" hidden>0</span></button>
+                <button id="logoutBtn" class="studio-logout-button" type="button" title="退出登录" aria-label="退出登录" data-i18n-title="logout" data-i18n-aria-label="logout">
+                  <span class="workspace-icon ri-log-out" aria-hidden="true"></span>
+                </button>
+              </div>
+
+              <div class="studio-panel-scroll">
+                <section class="studio-panel-view active" data-studio-panel-view="ai">
+                  <div class="workspace-model-card" aria-label="模型状态" data-i18n-aria-label="modelStatus">
+                    <div class="workspace-model-card-main">
+                      <span>
+                        <b data-i18n="imageGenerationModel">图像生成模型</b>
+                        <small data-i18n="imageGenerationUseCases">电商主图、详情页、活动海报</small>
+                      </span>
+                    </div>
+                    <em id="workspaceModelStatus" class="is-unconfigured" data-i18n="unconfigured">未配置</em>
+                  </div>
+                  <div class="studio-suggestion-list studio-prompt-chip-list" aria-label="快捷生成" data-i18n-aria-label="quickGenerate">
+                    <button class="studio-suggestion-card studio-prompt-chip" type="button" data-prompt="做一张医疗器械电商主图，背景干净，突出产品质感和卖点">
+                      <span>
+                        <b data-i18n="ecommerceMainImage">电商主图</b>
+                        <small data-i18n="productClear">产品清晰</small>
+                      </span>
+                    </button>
+                    <button class="studio-suggestion-card studio-prompt-chip" type="button" data-prompt="做一套详情页首屏背景，适合放产品、标题和三条卖点">
+                      <span>
+                        <b data-i18n="detailHero">详情首屏</b>
+                        <small data-i18n="titleSellingPoints">标题卖点区</small>
+                      </span>
+                    </button>
+                    <button class="studio-suggestion-card studio-prompt-chip" type="button" data-prompt="把参考图做成高级感推广海报素材，画面干净，有品牌质感">
+                      <span>
+                        <b data-i18n="campaignPoster">活动海报</b>
+                        <small data-i18n="brandVisual">品牌视觉</small>
+                      </span>
+                    </button>
+                  </div>
+                  <div id="aiChatList" class="ai-chat-list studio-ai-stream empty-state">
+                    <div class="workspace-output-empty">
+                      <div class="workspace-output-loading" aria-hidden="true">
+                        <span class="ai-loading-sprite"></span>
+                      </div>
+                      <div>
+                        <b data-i18n="waitingGeneration">等待生成</b>
+                        <small data-i18n="resultsAppear">结果会显示在这里</small>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="studio-panel-view" data-studio-panel-view="history">
+                  <div class="mini-section-title">
+                    <b data-i18n="tasks">生成任务</b>
+                    <button id="newAiConversationBtn" class="secondary compact-action" type="button" data-i18n="new">新建</button>
+                  </div>
+                  <div id="aiConversationList" class="ai-conversation-list empty-state" data-i18n="noGenerationTasks">还没有生成任务</div>
+                </section>
+
+                <section class="studio-panel-view" data-studio-panel-view="assets">
+                  <div class="mini-section-title">
+                    <b data-i18n="assets">素材</b>
+                    <span class="muted" data-i18n="uploadImage">上传图片</span>
+                  </div>
+                  <div class="studio-upload-grid">
+                    <label class="file-drop canvas-asset-upload" for="canvasAssetInput">
+                      <span data-i18n="uploadAssets">上传素材</span>
+                      <small>PNG / JPG / WebP / SVG</small>
+                    </label>
+                  </div>
+                  <div id="canvasAssetList" class="canvas-asset-list empty-state" data-i18n="importAssetsHint">导入素材后显示在这里</div>
+                </section>
+
+              </div>
+
+              <div class="studio-composer">
+                <div class="studio-composer-head">
+                  <b class="composer-purpose" data-i18n="promptDescription">描述画面，或上传参考图</b>
+                  <button id="privacyNoticeBtn" class="composer-privacy-button" type="button" data-i18n="privacyNotice">数据与 AI 说明</button>
+                </div>
+                <button id="aiConfigSummaryBtn" class="ai-config-summary" type="button" aria-expanded="false">
+                  <span data-i18n="generationConfig">生成配置</span>
+                  <b id="composerModelSummary" class="composer-model-summary"><span data-i18n="imageService">图片服务</span> · 1:1 · <span data-i18n-count="1">1张</span></b>
+                  <i aria-hidden="true">›</i>
+                </button>
+                <div id="aiConfigDrawer" class="ai-config-drawer" data-active-tab="output" hidden>
+                  <div class="ai-config-drawer-head">
+                    <div>
+                      <small data-i18n="generationKicker">GENERATION</small>
+                      <b data-i18n="generationConfig">生成配置</b>
+                    </div>
+                    <button id="aiConfigDrawerCloseBtn" class="icon-button" type="button" aria-label="关闭配置" data-i18n-aria-label="closeConfiguration">&times;</button>
+                  </div>
+                  <div class="ai-config-tabs" role="tablist" aria-label="生成配置分类" data-i18n-aria-label="configCategories">
+                    <button type="button" data-ai-config-tab="agent" data-i18n="agent">Agent</button>
+                    <button class="active" type="button" data-ai-config-tab="output" data-i18n="output">输出</button>
+                    <button type="button" data-ai-config-tab="model" data-i18n="model">模型</button>
+                  </div>
+                  <section class="ai-config-section" data-ai-config-section="agent" hidden>
+                    <div id="aiConfigAgentMount"></div>
+                  </section>
+                  <section class="ai-config-section" data-ai-config-section="output">
+                <div id="aiSettingsDrawer" class="studio-settings-drawer">
+                  <div class="composer-popover-head">
+                    <b data-i18n="sizeQuality">尺寸和质量</b>
+                    <button class="composer-popover-close" type="button" data-ai-popover-close="settings" aria-label="关闭" data-i18n-aria-label="close">&times;</button>
+                  </div>
+                  <div class="studio-setting-group">
+                    <b data-i18n="quality">清晰度</b>
+                    <div class="studio-segmented" role="group" aria-label="图片质量" data-i18n-aria-label="imageQuality">
+                      <button type="button" data-ai-quality="auto" data-i18n="auto">自动</button>
+                      <button type="button" data-ai-quality="high">4K</button>
+                      <button type="button" data-ai-quality="medium">2K</button>
+                      <button type="button" data-ai-quality="low">1K</button>
+                    </div>
+                  </div>
+                  <div class="studio-setting-group">
+                    <b data-i18n="ratio">比例</b>
+                    <div class="studio-size-inputs">
+                      <label>
+                        <span>W</span>
+                        <input id="aiWidthInput" type="number" min="16" max="12000" step="1" value="1024" />
+                      </label>
+                      <span class="size-link" aria-hidden="true">↔</span>
+                      <label>
+                        <span>H</span>
+                        <input id="aiHeightInput" type="number" min="16" max="12000" step="1" value="1024" />
+                      </label>
+                    </div>
+                    <p class="studio-auto-size-note" data-i18n="autoSizeNote">自动：有参考图按原图尺寸，无参考图按当前画板比例。</p>
+                    <div class="studio-ratio-grid" aria-label="生成比例" data-i18n-aria-label="generationRatio">
+                      <button type="button" data-ai-ratio="1:1"><span></span><b>1:1</b></button>
+                      <button type="button" data-ai-ratio="3:2"><span></span><b>3:2</b></button>
+                      <button type="button" data-ai-ratio="2:3"><span></span><b>2:3</b></button>
+                      <button type="button" data-ai-ratio="4:3"><span></span><b>4:3</b></button>
+                      <button type="button" data-ai-ratio="3:4"><span></span><b>3:4</b></button>
+                      <button type="button" data-ai-ratio="16:9"><span></span><b>16:9</b></button>
+                      <button type="button" data-ai-ratio="9:16"><span></span><b>9:16</b></button>
+                      <button type="button" data-ai-ratio="auto"><span></span><b data-i18n="auto">自动</b></button>
+                    </div>
+                  </div>
+                  <div class="studio-setting-group">
+                    <b data-i18n="count">张数</b>
+                    <div class="studio-count-grid" aria-label="生成张数" data-i18n-aria-label="generationCount">
+                      <button type="button" data-ai-count="1" data-i18n-count="1">1 张</button>
+                      <button type="button" data-ai-count="2" data-i18n-count="2">2 张</button>
+                      <button type="button" data-ai-count="3" data-i18n-count="3">3 张</button>
+                      <button type="button" data-ai-count="4" data-i18n-count="4">4 张</button>
+                    </div>
+                  </div>
+                  <div class="studio-native-controls" hidden>
+                    <select id="aiProvider" hidden>
+                      <option value="imageservice" data-i18n="imageService">图片服务</option>
+                      <option value="responsesimage">Responses 出图 Beta</option>
+                    </select>
+                    <select id="imageApiProvider" hidden>
+                      <option value="primary">服务 A</option>
+                      <option value="secondary">服务 B</option>
+                    </select>
+                    <input id="textModel" type="text" autocomplete="off" placeholder="后台统一配置" hidden />
+                    <select id="thinkingMode" hidden>
+                      <option value="off">关闭</option>
+                      <option value="standard">标准</option>
+                      <option value="deep">深度</option>
+                    </select>
+                    <select id="imageSize" hidden>
+                      <option value="1K">1K</option>
+                      <option value="2K">2K</option>
+                      <option value="4K">4K</option>
+                    </select>
+                    <select id="aspectRatio" hidden>
+                      <option>1:1</option>
+                      <option>1:4</option>
+                      <option>1:8</option>
+                      <option>2:3</option>
+                      <option>3:2</option>
+                      <option>4:3</option>
+                      <option>3:4</option>
+                      <option>4:1</option>
+                      <option>4:5</option>
+                      <option>5:4</option>
+                      <option>8:1</option>
+                      <option>16:9</option>
+                      <option>9:16</option>
+                      <option>21:9</option>
+                    </select>
+                    <input id="imageCount" type="number" min="1" max="8" value="1" hidden />
+                  </div>
+                  <div id="thinkingModeHint" class="ai-thinking-hint" aria-live="polite"></div>
+                  <div class="ai-chat-actions ai-canvas-chat-actions" hidden>
+                    <label class="ai-follow-base-toggle">
+                      <input id="useSelectedImageInput" type="checkbox" />
+                      <span data-i18n="imageGenerationOnly">仅用于新图生成</span>
+                    </label>
+                    <small id="selectedEditImageText" class="muted" data-i18n="noSelectedImage">未选中图片</small>
+                    <small id="relayStatusText" class="muted" data-i18n="newImageOnly">不关联画布选中图</small>
+                  </div>
+                </div>
+                  </section>
+                  <section class="ai-config-section" data-ai-config-section="model" hidden>
+                <div id="aiModelPrefsPanel" class="studio-model-prefs-panel">
+                  <div class="studio-model-head composer-popover-head">
+                        <b data-i18n="preferences">偏好</b>
+                    <div class="studio-model-head-actions">
+                      <label class="studio-auto-toggle">
+                        <span data-i18n="automaticModel">自动 · 管理员默认</span>
+                        <input id="aiAutoModeToggle" type="checkbox" checked />
+                      </label>
+                      <button class="composer-popover-close" type="button" data-ai-popover-close="model" aria-label="关闭" data-i18n-aria-label="close">&times;</button>
+                    </div>
+                  </div>
+                  <b class="studio-generation-mode-label" data-i18n="generationMode">生成模式</b>
+                  <div class="studio-model-tabs" role="tablist" aria-label="模型类型" data-i18n-aria-label="modelType">
+                    <button class="active" type="button" data-ai-model-tab="image" data-i18n="image">图片</button>
+                    <button type="button" data-ai-model-tab="video" data-i18n="video">视频</button>
+                    <button type="button" data-ai-model-tab="3d" data-i18n="threeD">3D</button>
+                  </div>
+                  <div class="studio-model-list" data-ai-model-list="image">
+                    <button type="button" data-ai-model-preset="imageservice:auto">
+                      <b><span data-i18n="imageService">图片服务</span> <span data-i18n="auto">自动</span></b>
+                      <span data-i18n="standardThinking">标准思考</span>
+                      <em>30s</em>
+                    </button>
+                    <button type="button" data-ai-model-preset="imageservice:low">
+                      <b><span data-i18n="imageService">图片服务</span> <span data-i18n="lowQuality">低清</span></b>
+                      <span data-i18n="noThinking">不思考</span>
+                      <em>30s</em>
+                    </button>
+                    <button type="button" data-ai-model-preset="imageservice:medium">
+                      <b><span data-i18n="imageService">图片服务</span> <span data-i18n="standard">标准</span></b>
+                      <span data-i18n="standardThinking">标准思考</span>
+                      <em>30s</em>
+                    </button>
+                    <button type="button" data-ai-model-preset="imageservice:medium-deep">
+                      <b><span data-i18n="imageService">图片服务</span> <span data-i18n="deep">深度</span></b>
+                      <span data-i18n="deepThinking">深度思考</span>
+                      <em>45s</em>
+                    </button>
+                  </div>
+                  <div class="studio-user-model-config" aria-label="用户模型配置" data-i18n-aria-label="userModels">
+                    <div class="studio-user-model-config-head">
+                      <b data-i18n="userModels">我的模型</b>
+                      <span data-i18n="localOnly">只保存在当前浏览器</span>
+                    </div>
+                    <label class="studio-user-model-field">
+                      <span data-i18n="currentImageModel">当前生图模型</span>
+                      <select id="userImageModelSelect">
+                        <option value="" data-i18n="backendDefaultModel">后台默认模型</option>
+                      </select>
+                    </label>
+                    <label class="studio-user-model-field">
+                      <span data-i18n="modelList">模型列表</span>
+                      <textarea id="userImageModelList" rows="3" placeholder="每行一个模型名，例如：model-a\nmodel-b" data-i18n-placeholder="modelListPlaceholder"></textarea>
+                    </label>
+                    <div class="studio-user-model-actions">
+                      <button id="userImageModelSaveBtn" type="button" data-i18n="saveMyModels">保存我的模型</button>
+                      <button id="userImageModelResetBtn" type="button" data-i18n="resetBackendDefault">恢复后台默认</button>
+                    </div>
+                    <small id="userImageModelStatus" class="studio-user-model-status" data-i18n="userModelDefaultStatus">未配置用户模型，当前使用后台默认。</small>
+                  </div>
+                  <div class="studio-model-list" data-ai-model-list="video" hidden>
+                    <button type="button" disabled>
+                      <b>Video Skill</b>
+                      <span data-i18n="currentProjectImageChain">当前项目先接图片生成链路。</span>
+                      <em>--</em>
+                    </button>
+                  </div>
+                  <div class="studio-model-list" data-ai-model-list="3d" hidden>
+                    <button type="button" disabled>
+                      <b>3D Skill</b>
+                      <span data-i18n="currentProjectImageChain">当前项目先接图片生成链路。</span>
+                      <em>--</em>
+                    </button>
+                  </div>
+                </div>
+                  </section>
+                </div>
+                <div id="referencePreviewList" class="reference-preview-list composer-attachments" hidden></div>
+                <div id="canvasFocusTargetChip" class="canvas-focus-target-chip" hidden></div>
+                <div class="studio-composer-box">
+                  <textarea id="directPromptInput" rows="3" placeholder="描述画面，或上传参考图" data-i18n-placeholder="promptDescription"></textarea>
+                  <div class="studio-composer-actions">
+                    <div class="composer-toolbar-left">
+                      <label class="icon-button composer-asset-button" for="referenceImageInput" title="上传附件/素材" data-i18n-title="uploadAttachment">
+                        <input id="referenceImageInput" type="file" accept="image/png,image/jpeg" multiple />
+                        <span class="workspace-icon ri-plus" aria-hidden="true"></span>
+                      </label>
+                      <button id="webSearchToggle" class="icon-button web-search-toggle" type="button" aria-pressed="false" title="联网搜索" data-i18n-title="webSearch"><span class="workspace-icon ri-search" aria-hidden="true"></span></button>
+                      <div class="ai-tool-menu">
+                        <button id="aiSkillMenuBtn" class="composer-agent-button" type="button" aria-expanded="false">
+                          <span class="workspace-icon ri-sparkles" aria-hidden="true"></span>
+                          <b data-i18n="agent">智能体</b>
+                          <small id="selectedSkillName" data-i18n="skillNoneName">未选择</small>
+                          <i aria-hidden="true">⌄</i>
+                        </button>
+                        <div id="aiSkillMenu" class="ai-skill-menu" hidden></div>
+                      </div>
+                    </div>
+                    <div class="composer-toolbar-right">
+                      <button id="aiModelPrefsBtn" class="icon-button studio-model-toggle" type="button" aria-expanded="false" title="模型偏好" data-i18n-title="modelPreferences"><span class="workspace-icon ri-gem" aria-hidden="true"></span></button>
+                      <button id="aiSettingsToggleBtn" class="icon-button studio-settings-toggle" type="button" aria-expanded="false" title="尺寸和质量" data-i18n-title="sizeQuality"><span class="workspace-icon ri-sliders" aria-hidden="true"></span></button>
+                      <button id="generateImagesBtn" class="send-orb" type="button" title="发送" data-i18n-title="send"><span class="workspace-icon ri-arrow-up" aria-hidden="true"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="imagePreviewDialog" class="image-preview-dialog" hidden>
+      <div class="image-preview-backdrop" data-close-preview></div>
+      <figure class="image-preview-frame">
+        <button class="image-preview-close" type="button" data-close-preview data-i18n="close">关闭</button>
+        <img id="imagePreviewLarge" alt="AI 大图预览" />
+        <figcaption id="imagePreviewCaption"></figcaption>
+      </figure>
+    </div>
+
+    <div id="aiFailureDialog" class="ai-failure-dialog" role="dialog" aria-modal="true" aria-labelledby="aiFailureTitle" hidden>
+      <section class="ai-failure-card">
+        <div class="ai-failure-mark" aria-hidden="true">!</div>
+        <div class="ai-failure-content">
+          <p class="ai-failure-kicker" data-i18n="taskFailed">任务失败</p>
+          <h2 id="aiFailureTitle" data-i18n="generationFailed">生成失败</h2>
+          <p id="aiFailureMessage" class="ai-failure-message" data-i18n="failureHelp">请检查提示词、图片尺寸或后台模型配置后重试。</p>
+        </div>
+        <button id="aiFailureAckBtn" class="primary full" type="button" data-i18n="confirm">确认</button>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="loginOverlay" class="login-overlay">
+      <form id="loginForm" class="login-card">
+        <div class="login-brand">
+          <span class="login-kicker">AI CREATION CANVAS</span>
+          <h2 data-i18n="workspaceLogin">登录工作区</h2>
+        </div>
+        <label class="field">
+          <span data-i18n="username">账号</span>
+          <input id="loginUsername" type="text" autocomplete="username" placeholder="请输入员工账号" data-i18n-placeholder="employeeUsername" />
+        </label>
+        <label class="field">
+          <span data-i18n="password">密码</span>
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="请输入密码" data-i18n-placeholder="employeePassword" />
+        </label>
+        <label class="login-remember-line">
+          <input id="loginRemember" type="checkbox" />
+          <span data-i18n="rememberMe">记住登录状态</span>
+        </label>
+        <div class="login-assist-row">
+          <button id="changePasswordBtn" class="login-assist-button" type="button" data-i18n="changePassword">修改密码</button>
+          <button id="forgotPasswordBtn" class="forgot-password-button" type="button" data-i18n="forgotPassword">忘记密码</button>
+        </div>
+        <p id="loginError" class="login-error"></p>
+        <button id="loginBtn" class="primary full" type="submit" data-i18n="login">登录</button>
+      </form>
+    </div>
+    <div id="releaseNoticeDialog" class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="releaseNoticeTitle" hidden>
+      <section class="release-notice-card">
+        <div class="release-notice-head">
+          <span data-i18n="releaseNotice">版本更新</span>
+          <h2 id="releaseNoticeTitle" data-i18n="openSourcePreview">开源预览版说明</h2>
+        </div>
+        <p data-i18n="releaseIntro">此开源预览版包含以下功能：</p>
+        <ol>
+          <li data-i18n="releaseFeature1">提供电商图片生成、参考图理解和连续修改能力。</li>
+          <li data-i18n="releaseFeature2">提供无限画布、素材管理和基础图层查看。</li>
+          <li data-i18n="releaseFeature3">公开发布前请自行配置模型服务与账户系统。</li>
+        </ol>
+        <p data-i18n="releaseSecurity">请勿在公开仓库中提交密钥、账号数据库、用户素材或生成结果。</p>
+        <button id="releaseNoticeAckBtn" class="primary full" type="button" data-i18n="acknowledge">我已阅读并确认</button>
+      </section>
+    </div>
+    <div id="privacyNoticeDialog" class="release-notice-dialog privacy-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="privacyNoticeTitle" hidden>
+      <section class="release-notice-card privacy-notice-card">
+        <div class="release-notice-head">
+          <span data-i18n="privacyNotice">数据与 AI 说明</span>
+          <h2 id="privacyNoticeTitle" data-i18n="privacyTitle">使用前请了解数据如何处理</h2>
+        </div>
+        <p data-i18n="privacyIntro">本应用由部署和运营它的组织管理数据。</p>
+        <ol>
+          <li data-i18n="privacyExternalAi">提示词、参考图片和上传资料可能发送给管理员配置的外部 AI 服务。</li>
+          <li data-i18n="privacyFailureLog">AI 任务失败时，系统会自动保留提示词、参考图、账号信息、服务和模型，供管理员排查问题。</li>
+          <li id="privacyRetentionSummary">本地失败日志、反馈、对话、项目和生成图片会按管理员设置的保留期自动清理。</li>
+          <li data-i18n="privacySensitive">请勿上传与任务无关的个人敏感信息、商业秘密或无权使用的素材。</li>
+        </ol>
+        <p id="privacyOperatorContact"></p>
+        <button id="privacyNoticeAckBtn" class="primary full" type="button" data-i18n="understood">我知道了</button>
+      </section>
+    </div>
+    <div id="passwordDialog" class="password-dialog" hidden>
+      <form id="passwordForm" class="password-card">
+        <div class="password-card-head">
+          <b data-i18n="changePassword">修改密码</b>
+          <button id="passwordCancelBtn" class="icon-close" type="button" aria-label="关闭" data-i18n-aria-label="close">×</button>
+        </div>
+        <label class="field">
+          <span data-i18n="username">账号</span>
+          <input id="passwordUsername" type="text" autocomplete="username" placeholder="请输入员工账号" data-i18n-placeholder="employeeUsername" />
+        </label>
+        <label class="field">
+          <span data-i18n="currentPassword">当前密码</span>
+          <input id="currentPassword" type="password" autocomplete="current-password" placeholder="请输入当前密码" data-i18n-placeholder="currentPasswordPlaceholder" />
+        </label>
+        <label class="field">
+          <span data-i18n="newPassword">新密码</span>
+          <input id="newPassword" type="password" autocomplete="new-password" placeholder="至少 6 位" data-i18n-placeholder="passwordMinLength" />
+        </label>
+        <label class="field">
+          <span data-i18n="confirmPassword">确认新密码</span>
+          <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="再次输入新密码" data-i18n-placeholder="repeatNewPassword" />
+        </label>
+        <p id="passwordError" class="login-error"></p>
+        <button id="passwordSubmitBtn" class="primary full" type="submit" data-i18n="saveNewPassword">保存新密码</button>
+      </form>
+    </div>
+    <script src="./vendor/fabric.min.js"></script>
+  <script src="./src/utils.js?v=open-source-preview-11"></script>
+    <script src="./src/app-state.js?v=open-source-preview-21"></script>
+    <script src="./src/ai-controls.js?v=open-source-preview-21"></script>
+    <script src="./src/ai-size.js?v=open-source-preview-21"></script>
+    <script src="./src/conversations.js?v=open-source-preview-14"></script>
+    <script src="./src/canvas-workspace.js?v=open-source-preview-14"></script>
+  <script src="./src/canvas-events.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-context.js?v=open-source-preview-11"></script>
+  <script src="./src/canvas-assets.js?v=open-source-preview-21"></script>
+    <script src="./src/references.js?v=open-source-preview-11"></script>
+    <script src="./src/auth.js?v=open-source-preview-21"></script>
+    <script src="./src/canvas-layers.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-performance.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-projects.js?v=open-source-preview-14"></script>
+    <script src="./src/ai-chat-renderer.js?v=open-source-preview-14"></script>
+    <script src="./src/ai-generation.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-image-ai.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-image-editing.js?v=open-source-preview-11"></script>
+    <script src="./src/canvas-objects.js?v=open-source-preview-21"></script>
+    <script src="./src/app-shell.js?v=open-source-preview-21"></script>
+  <script src="./app.js?v=open-source-preview-21"></script>
+  </body>
+</html>

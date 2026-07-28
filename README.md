@@ -4,9 +4,13 @@ An open-source, local-first workspace for AI image creation, product asset manag
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24-339933.svg)](./package.json)
-[![Release](https://img.shields.io/badge/release-preview-orange.svg)](./package.json)
+[![CI](https://github.com/bestdive999-coder/ai-creative-canvas/actions/workflows/ci.yml/badge.svg)](https://github.com/bestdive999-coder/ai-creative-canvas/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/bestdive999-coder/ai-creative-canvas?include_prereleases)](https://github.com/bestdive999-coder/ai-creative-canvas/releases)
+[![Stars](https://img.shields.io/github/stars/bestdive999-coder/ai-creative-canvas?style=flat)](https://github.com/bestdive999-coder/ai-creative-canvas/stargazers)
 
 **Languages:** [English](./README.md) · [简体中文](./docs/i18n/README.zh-CN.md) · [日本語](./docs/i18n/README.ja.md) · [한국어](./docs/i18n/README.ko.md) · [Español](./docs/i18n/README.es.md) · [Português](./docs/i18n/README.pt-BR.md) · [Français](./docs/i18n/README.fr.md) · [Deutsch](./docs/i18n/README.de.md) · [Русский](./docs/i18n/README.ru.md) · [العربية](./docs/i18n/README.ar.md)
+
+![AI Creative Canvas overview](./docs/assets/social-preview.png)
 
 > This repository is a sanitized technical preview. It is designed for local or private-network deployment and does not include the original project's private data, credentials, templates, or brand assets.
 
@@ -26,6 +30,18 @@ The cloud layer is deliberately optional: local storage remains the source of tr
 - **Local-first persistence** — conversations, canvas projects, and local assets are written to `runtime/` on the appliance.
 - **Optional cloud backup** — reuse generic S3-compatible object storage without binding the runtime to a vendor.
 - **Open-source boundaries** — Apache-2.0 license, third-party notices, and security guidance are included.
+
+## Screenshots
+
+| Employee workspace | User-selected models |
+| --- | --- |
+| ![Employee workspace](./docs/assets/employee-workspace.png) | ![User-selected image models](./docs/assets/model-preferences.png) |
+
+| 10-language interface | Administrator console |
+| --- | --- |
+| ![Portuguese employee workspace](./docs/assets/portuguese-workspace.png) | ![Administrator console](./docs/assets/admin-console.png) |
+
+[Watch the short interface tour](./docs/assets/interface-tour.gif).
 
 ## Product tour and cases
 
@@ -75,6 +91,24 @@ npm run admin
 ```
 
 Open <http://127.0.0.1:5188>. There is no default administrator password.
+
+### Start both workspaces
+
+```bash
+npm run start:all
+```
+
+### Docker Compose
+
+```bash
+docker compose up --build
+```
+
+Employee workspace: <http://127.0.0.1:5173>
+
+Administrator workspace: <http://127.0.0.1:5188>
+
+The Compose setup stores application data in the `canvas-runtime` volume. Create the first administrator account immediately, keep both ports behind trusted network controls, and use an HTTPS reverse proxy before exposing the service outside a private network.
 
 ### Run the test suite
 
@@ -157,7 +191,9 @@ The cloud copy is a backup record. The employee workspace continues to read from
 - [Architecture and data boundaries](./docs/ARCHITECTURE.md)
 - [Workflow cases](./docs/CASES.md)
 - [Localization guide](./docs/LOCALIZATION.md)
+- [Docker deployment](./docs/DOCKER.md)
 - [Contributing guide](./CONTRIBUTING.md)
+- [Community conduct](./CODE_OF_CONDUCT.md)
 - [Security policy](./SECURITY.md)
 - [Privacy and data deletion](./PRIVACY.md)
 - [Acceptable-use and generated-content rules](./ACCEPTABLE_USE.md)

@@ -149,6 +149,9 @@ test("employee and admin dynamic interface text use a bundled ten-language catal
   assert.match(adminText, /const attributeSources = new WeakMap\(\)/);
   assert.match(adminText, /locale === "zh-CN" \? text : translate\(text, locale\)/);
   assert.match(adminText, /locale === "zh-CN" \? record\.source : translate\(record\.source, locale\)/);
+  assert.match(adminText, /"__V0__：已打开工具菜单。":\s*"__V0__: tool menu opened\."/);
+  assert.match(adminText, /"__V0__ 已加入画布。":\s*"__V0__ was added to the canvas\."/);
+  assert.match(adminText, /"文字已加入画布，双击即可编辑。":\s*"Text was added to the canvas\. Double-click to edit\."/);
 });
 
 test("employee persistent UI and dynamic panels are wired to runtime localization", async () => {
@@ -256,7 +259,8 @@ test("all employee locales localize the project bar, generation drawer, model ch
     "userModelDefaultStatus", "imageCountFormat", "taskFilters", "running", "attention",
     "completed", "failed", "noTasksInFilter", "skillCategoryVideo", "skillCategorySocial",
     "skillCategoryEcommerce", "skillCategoryBrand", "skillTypeAgent", "skillRebuildName",
-    "skillMainImageName", "skillDetailName", "skillCampaignName", "skillEcommerceName"
+    "skillMainImageName", "skillDetailName", "skillCampaignName", "skillEcommerceName",
+    "canvasToolMenuOpened", "canvasObjectAdded", "canvasTextAdded", "shapeText"
   ];
   const localizedAgainstEnglish = new Set(keys.filter((key) => ![
     "assets", "agent", "image", "video", "standard", "imageCountFormat",

@@ -809,6 +809,69 @@
     }
   };
   Object.entries(privacyLocaleSupplements).forEach(([locale, values]) => Object.assign(dictionaries[locale], values));
+  const canvasStatusLocaleSupplements = {
+    en: {
+      shapeText: "Shape text",
+      canvasToolMenuOpened: "{label}: tool menu opened.",
+      canvasObjectAdded: "{label} was added to the canvas.",
+      canvasTextAdded: "Text was added to the canvas. Double-click to edit."
+    },
+    "zh-CN": {
+      shapeText: "形状文字",
+      canvasToolMenuOpened: "{label}：已打开工具菜单。",
+      canvasObjectAdded: "{label} 已加入画布。",
+      canvasTextAdded: "文字已加入画布，双击即可编辑。"
+    },
+    ja: {
+      shapeText: "図形テキスト",
+      canvasToolMenuOpened: "{label}：ツールメニューを開きました。",
+      canvasObjectAdded: "{label}をキャンバスに追加しました。",
+      canvasTextAdded: "テキストをキャンバスに追加しました。ダブルクリックして編集できます。"
+    },
+    ko: {
+      shapeText: "도형 텍스트",
+      canvasToolMenuOpened: "{label}: 도구 메뉴를 열었습니다.",
+      canvasObjectAdded: "{label}을(를) 캔버스에 추가했습니다.",
+      canvasTextAdded: "텍스트를 캔버스에 추가했습니다. 두 번 클릭하여 편집하세요."
+    },
+    es: {
+      shapeText: "Texto de forma",
+      canvasToolMenuOpened: "{label}: menú de herramientas abierto.",
+      canvasObjectAdded: "{label} se añadió al lienzo.",
+      canvasTextAdded: "El texto se añadió al lienzo. Haz doble clic para editarlo."
+    },
+    "pt-BR": {
+      shapeText: "Texto de forma",
+      canvasToolMenuOpened: "{label}: menu de ferramentas aberto.",
+      canvasObjectAdded: "{label} foi adicionada ao canvas.",
+      canvasTextAdded: "O texto foi adicionado ao canvas. Clique duas vezes para editar."
+    },
+    fr: {
+      shapeText: "Texte de forme",
+      canvasToolMenuOpened: "{label} : menu d’outils ouvert.",
+      canvasObjectAdded: "{label} a été ajoutée au canevas.",
+      canvasTextAdded: "Le texte a été ajouté au canevas. Double-cliquez pour le modifier."
+    },
+    de: {
+      shapeText: "Formtext",
+      canvasToolMenuOpened: "{label}: Werkzeugmenü geöffnet.",
+      canvasObjectAdded: "{label} wurde zur Zeichenfläche hinzugefügt.",
+      canvasTextAdded: "Text wurde zur Zeichenfläche hinzugefügt. Doppelklicken Sie zum Bearbeiten."
+    },
+    ru: {
+      shapeText: "Текст в фигуре",
+      canvasToolMenuOpened: "{label}: меню инструментов открыто.",
+      canvasObjectAdded: "{label} добавлена на холст.",
+      canvasTextAdded: "Текст добавлен на холст. Дважды щёлкните, чтобы изменить его."
+    },
+    ar: {
+      shapeText: "نص الشكل",
+      canvasToolMenuOpened: "{label}: تم فتح قائمة الأدوات.",
+      canvasObjectAdded: "تمت إضافة {label} إلى اللوحة.",
+      canvasTextAdded: "تمت إضافة النص إلى اللوحة. انقر نقراً مزدوجاً للتحرير."
+    }
+  };
+  Object.entries(canvasStatusLocaleSupplements).forEach(([locale, values]) => Object.assign(dictionaries[locale], values));
 
   function normalizeLocale(value) {
     const raw = String(value || "").trim();

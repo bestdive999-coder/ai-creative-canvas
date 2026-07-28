@@ -2,13 +2,30 @@
   "name": "ecommerce-canvas-ai-workbench",
   "version": "0.1.0-preview.22",
   "private": true,
-  "description": "Sanitized open-source preview of an e-commerce AI creation workbench.",
+  "description": "Self-hosted multilingual AI creative canvas for product image workflows.",
   "author": "zk",
   "license": "Apache-2.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bestdive999-coder/ai-creative-canvas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bestdive999-coder/ai-creative-canvas/issues"
+  },
+  "homepage": "https://github.com/bestdive999-coder/ai-creative-canvas#readme",
+  "keywords": [
+    "ai",
+    "canvas",
+    "ecommerce",
+    "image-generation",
+    "multilingual",
+    "self-hosted"
+  ],
   "scripts": {
     "start": "node server.js",
     "admin": "node admin-server.js",
+    "start:all": "node scripts/start-all.mjs",
     "test": "node --test tests/*.test.mjs",
     "check:clean": "node scripts/check-public-cleanliness.mjs",
     "check:fonts": "node scripts/check-font-distribution.mjs",

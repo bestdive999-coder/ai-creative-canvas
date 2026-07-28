@@ -44,7 +44,10 @@
       canvas.requestRenderAll();
       updateCanvasPropsPanel();
       renderCanvasLayers();
-      canvasBetaStatus("文字已加入画布，双击即可编辑。");
+      canvasBetaStatus(window.EcommerceCanvasI18n?.t(
+        "canvasTextAdded",
+        "Text was added to the canvas. Double-click to edit."
+      ));
     }
     
     function addCanvasShape(shape = "rect") {
@@ -89,7 +92,12 @@
       updateCanvasPropsPanel();
       updateCanvasObjectToolbar();
       renderCanvasLayers();
-      canvasBetaStatus(`${object.name || "形状"} 已加入画布。`);
+      const shapeLabel = window.EcommerceCanvasI18n?.t("shape", "Shape") || "Shape";
+      canvasBetaStatus(window.EcommerceCanvasI18n?.format(
+        "canvasObjectAdded",
+        { label: shapeLabel },
+        `${shapeLabel} was added to the canvas.`
+      ));
     }
     
     function selectedCanvasObject() {

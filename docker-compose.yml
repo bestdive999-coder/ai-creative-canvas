@@ -1,0 +1,17 @@
+services:
+  canvas:
+    build: .
+    environment:
+      PORT: 5173
+      ADMIN_PORT: 5188
+      ECOM_EMPLOYEE_HOST: 0.0.0.0
+      ECOM_ADMIN_HOST: 0.0.0.0
+    ports:
+      - "5173:5173"
+      - "5188:5188"
+    volumes:
+      - canvas-runtime:/app/runtime
+    restart: unless-stopped
+
+volumes:
+  canvas-runtime:

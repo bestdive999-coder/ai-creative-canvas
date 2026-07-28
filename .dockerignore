@@ -1,0 +1,12 @@
+.git
+.github
+.env
+.env.*
+node_modules
+runtime
+output
+outputs
+test-results
+*.log
+*.zip
+docs/assets/*.svg

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="0.55" stop-color="#eef8f7"/>
+      <stop offset="1" stop-color="#dff2ef"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <clipPath id="screen">
+      <rect x="554" y="70" width="676" height="500" rx="28"/>
+    </clipPath>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#0f172a" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1190" cy="86" r="190" fill="#99f6e4" opacity="0.28"/>
+  <circle cx="100" cy="580" r="220" fill="#bae6fd" opacity="0.34"/>
+  <rect x="54" y="55" width="78" height="78" rx="22" fill="url(#accent)"/>
+  <text x="93" y="106" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#fff">AI</text>
+  <text x="54" y="190" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800" fill="#0f172a">AI Creative</text>
+  <text x="54" y="250" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800" fill="#0f172a">Canvas</text>
+  <text x="54" y="305" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="500" fill="#475569">Self-hosted workspace for product</text>
+  <text x="54" y="339" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="500" fill="#475569">images, detail pages, and canvas iteration.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">
+    <rect x="54" y="390" width="144" height="42" rx="21" fill="#fff" stroke="#cbd5e1"/>
+    <text x="126" y="417" text-anchor="middle" fill="#0f172a">Local-first</text>
+    <rect x="210" y="390" width="156" height="42" rx="21" fill="#fff" stroke="#cbd5e1"/>
+    <text x="288" y="417" text-anchor="middle" fill="#0f172a">10 languages</text>
+    <rect x="54" y="446" width="246" height="42" rx="21" fill="#fff" stroke="#cbd5e1"/>
+    <text x="177" y="473" text-anchor="middle" fill="#0f172a">User-selected models</text>
+    <rect x="312" y="446" width="144" height="42" rx="21" fill="#fff" stroke="#cbd5e1"/>
+    <text x="384" y="473" text-anchor="middle" fill="#0f172a">Apache-2.0</text>
+  </g>
+  <text x="54" y="552" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#0f766e">Employee workspace + admin console</text>
+  <g filter="url(#shadow)">
+    <rect x="544" y="60" width="696" height="520" rx="34" fill="#fff"/>
+  </g>
+  <g clip-path="url(#screen)">
+    <image href="employee-workspace.png" x="365" y="70" width="889" height="500" preserveAspectRatio="none"/>
+  </g>
+  <rect x="554" y="70" width="676" height="500" rx="28" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+</svg>

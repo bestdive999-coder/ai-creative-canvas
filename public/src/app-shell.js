@@ -345,7 +345,13 @@
           });
           group.classList.toggle("open", !wasOpen);
           const label = trigger.dataset.tooltip || trigger.title || "工具";
-          if (label && !wasOpen) canvasBetaStatus(`${label.replace(/\s+/g, " ")}：已打开工具菜单。`);
+          if (label && !wasOpen) {
+            canvasBetaStatus(window.EcommerceCanvasI18n?.format(
+              "canvasToolMenuOpened",
+              { label: label.replace(/\s+/g, " ") },
+              `${label.replace(/\s+/g, " ")}: tool menu opened.`
+            ));
+          }
         });
         group.querySelectorAll(".studio-flyout [data-tool-mode], .studio-flyout [data-canvas-shape], .studio-flyout [data-canvas-upload], .studio-flyout label").forEach((item) => {
           item.addEventListener("click", () => {

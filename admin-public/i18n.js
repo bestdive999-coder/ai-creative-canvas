@@ -300,6 +300,20 @@
     }
   };
 
+  const versionLocaleSupplements = {
+    en: { versionSummary: "Current {current} · Latest {latest}", notSpecified: "Not specified", maintenance: "Maintenance", quickAccess: "Quick access" },
+    "zh-CN": { versionSummary: "当前 {current} · 最新 {latest}", notSpecified: "未填写", maintenance: "维护", quickAccess: "常用入口" },
+    ja: { versionSummary: "現在 {current} · 最新 {latest}", notSpecified: "未設定", maintenance: "メンテナンス", quickAccess: "クイックアクセス" },
+    ko: { versionSummary: "현재 {current} · 최신 {latest}", notSpecified: "미설정", maintenance: "유지보수", quickAccess: "빠른 메뉴" },
+    es: { versionSummary: "Actual {current} · Última {latest}", notSpecified: "Sin especificar", maintenance: "Mantenimiento", quickAccess: "Accesos rápidos" },
+    "pt-BR": { versionSummary: "Atual {current} · Mais recente {latest}", notSpecified: "Não especificado", maintenance: "Manutenção", quickAccess: "Acesso rápido" },
+    fr: { versionSummary: "Actuelle {current} · Dernière {latest}", notSpecified: "Non spécifiée", maintenance: "Maintenance", quickAccess: "Accès rapides" },
+    de: { versionSummary: "Aktuell {current} · Neueste {latest}", notSpecified: "Nicht angegeben", maintenance: "Wartung", quickAccess: "Schnellzugriff" },
+    ru: { versionSummary: "Текущая {current} · Последняя {latest}", notSpecified: "Не указана", maintenance: "Обслуживание", quickAccess: "Быстрый доступ" },
+    ar: { versionSummary: "الحالي {current} · الأحدث {latest}", notSpecified: "غير محدد", maintenance: "الصيانة", quickAccess: "الوصول السريع" }
+  };
+  Object.entries(versionLocaleSupplements).forEach(([locale, values]) => Object.assign(dictionaries[locale], values));
+
   const privacySupplements = {
     en: {
       privacyAndRetention: "Privacy and retention", retentionEnabledSummary: "Automatic cleanup is enabled",

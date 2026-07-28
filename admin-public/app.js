@@ -2,6 +2,12 @@
 
 const tr = (key, fallback = "") => window.EcommerceCanvasI18n?.t(key, fallback) || fallback || key;
 
+function localizedVersionSummary(currentVersion, latestVersion) {
+  return tr("versionSummary", "Current {current} · Latest {latest}")
+    .replaceAll("{current}", escapeHtml(currentVersion))
+    .replaceAll("{latest}", escapeHtml(latestVersion));
+}
+
 const els = {
   loginOverlay: $("#loginOverlay"),
   loginForm: $("#loginForm"),
@@ -545,9 +551,12 @@ function renderVersionCard(update, updates, autostart) {
       <div class="card-head">
         <div>
           <b>版本与守护</b>
-          <span>当前 ${escapeHtml(updates.currentVersion || "0.1.0-preview.22")} · 最新 ${escapeHtml(updates.latestVersion || "未填写")}</span>
+          <span>${localizedVersionSummary(
+            updates.currentVersion || "0.1.0-preview.23",
+            updates.latestVersion || tr("notSpecified", "Not specified")
+          )}</span>
         </div>
-        <button class="secondary small-action" type="button" data-admin-module="system">维护</button>
+        <button class="secondary small-action" type="button" data-admin-module="system">${tr("maintenance", "Maintenance")}</button>
       </div>
       <div class="version-stack">
         <span class="update-status ${escapeHtml(status)}">${escapeHtml(statusText)}</span>
@@ -567,7 +576,7 @@ function renderModuleShortcutGrid(data, users) {
     <section class="card shortcut-card">
       <div class="card-head">
         <div>
-          <b>常用入口</b>
+          <b>${tr("quickAccess", "Quick access")}</b>
           <span>按后台任务重新分区，不再混在一页里</span>
         </div>
       </div>
@@ -1539,9 +1548,12 @@ function settingsForm(config, autostart, update) {
           <span>${escapeHtml(tr("failureLoggingNoticeBody", "The employee notice explains that failed AI tasks may retain prompts, references, account details, provider, and model for troubleshooting."))}</span>
         </div>
       `)}
-      ${settingsSectionCard("版本更新配置", `当前 ${updates.currentVersion || "0.1.0-preview.22"} · 最新 ${updates.latestVersion || "未填写"}`, `
+      ${settingsSectionCard("版本更新配置", localizedVersionSummary(
+        updates.currentVersion || "0.1.0-preview.23",
+        updates.latestVersion || tr("notSpecified", "Not specified")
+      ), `
         <div class="settings-grid">
-          <label><span>当前版本</span><input id="currentVersion" value="${escapeHtml(updates.currentVersion || "0.1.0-preview.22")}" /></label>
+          <label><span>当前版本</span><input id="currentVersion" value="${escapeHtml(updates.currentVersion || "0.1.0-preview.23")}" /></label>
           <label><span>最新版本</span><input id="latestVersion" value="${escapeHtml(updates.latestVersion || "")}" /></label>
           <label><span>更新包地址</span><input id="packageUrl" value="${escapeHtml(updates.packageUrl || "")}" placeholder="内网 ZIP / EXE 下载地址" /></label>
           <label class="span-2"><span>更新说明</span><textarea id="releaseNote" rows="3">${escapeHtml(updates.releaseNote || "")}</textarea></label>

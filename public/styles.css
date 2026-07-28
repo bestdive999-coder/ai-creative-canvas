@@ -9086,7 +9086,6 @@ body.workspace-mode .ai-batch-card-failed small {
   -webkit-line-clamp: 4;
 }
 
-/* Locale-safe controls and responsive employee workbench. */
 select.native-select-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -9499,7 +9498,6 @@ html[dir="rtl"] body.workspace-mode .studio-panel-top-icons .locale-picker .cust
   }
 }
 
-/* Open-source preview 18: keep long localized project controls readable. */
 body.workspace-mode .studio-project-bar {
   width: max-content;
   max-width: min(940px, calc(100vw - var(--panel-width) - 64px));

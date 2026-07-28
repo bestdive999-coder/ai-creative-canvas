@@ -16,11 +16,11 @@ test("enhanced selects stay visually hidden and open as overlay menus", async ()
 test("localized workbench keeps locale in the project bar and reserves four panel-header columns", async () => {
   const css = await read("public/styles.css");
 
-  assert.match(css, /Open-source preview 18[\s\S]*?grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)\s*30px;/);
-  assert.match(css, /Open-source preview 18[\s\S]*?\.studio-logout-button\[style\][\s\S]*?display:\s*flex\s*!important;[\s\S]*?grid-column:\s*4;/);
+  assert.match(css, /body\.workspace-mode \.studio-panel-top-icons\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)\s*30px;/);
+  assert.match(css, /body\.workspace-mode \.studio-panel-top-icons \.studio-logout-button,[\s\S]*?\.studio-logout-button\[style\]\s*\{[\s\S]*?display:\s*flex\s*!important;[\s\S]*?grid-column:\s*4;/);
   assert.match(css, /\.project-locale-picker \.custom-select-menu\s*\{[\s\S]*?width:\s*max-content;[\s\S]*?max-width:\s*min\(240px,\s*calc\(100vw - 24px\)\)/);
   assert.match(css, /@media \(max-width:\s*420px\)[\s\S]*?\.project-locale-picker\s*\{[\s\S]*?flex-basis:\s*74px;/);
-  assert.match(css, /Open-source preview 18[\s\S]*?\.studio-project-bar \.studio-text-button\s*\{[\s\S]*?min-width:\s*max-content;/);
+  assert.match(css, /body\.workspace-mode \.studio-project-bar \.studio-text-button\s*\{[\s\S]*?min-width:\s*max-content;/);
 });
 
 test("long localized labels wrap without forcing horizontal overflow", async () => {

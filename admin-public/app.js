@@ -545,7 +545,7 @@ function renderVersionCard(update, updates, autostart) {
       <div class="card-head">
         <div>
           <b>版本与守护</b>
-          <span>当前 ${escapeHtml(updates.currentVersion || "0.1.0-preview.21")} · 最新 ${escapeHtml(updates.latestVersion || "未填写")}</span>
+          <span>当前 ${escapeHtml(updates.currentVersion || "0.1.0-preview.22")} · 最新 ${escapeHtml(updates.latestVersion || "未填写")}</span>
         </div>
         <button class="secondary small-action" type="button" data-admin-module="system">维护</button>
       </div>
@@ -1539,9 +1539,9 @@ function settingsForm(config, autostart, update) {
           <span>${escapeHtml(tr("failureLoggingNoticeBody", "The employee notice explains that failed AI tasks may retain prompts, references, account details, provider, and model for troubleshooting."))}</span>
         </div>
       `)}
-      ${settingsSectionCard("版本更新配置", `当前 ${updates.currentVersion || "0.1.0-preview.21"} · 最新 ${updates.latestVersion || "未填写"}`, `
+      ${settingsSectionCard("版本更新配置", `当前 ${updates.currentVersion || "0.1.0-preview.22"} · 最新 ${updates.latestVersion || "未填写"}`, `
         <div class="settings-grid">
-          <label><span>当前版本</span><input id="currentVersion" value="${escapeHtml(updates.currentVersion || "0.1.0-preview.21")}" /></label>
+          <label><span>当前版本</span><input id="currentVersion" value="${escapeHtml(updates.currentVersion || "0.1.0-preview.22")}" /></label>
           <label><span>最新版本</span><input id="latestVersion" value="${escapeHtml(updates.latestVersion || "")}" /></label>
           <label><span>更新包地址</span><input id="packageUrl" value="${escapeHtml(updates.packageUrl || "")}" placeholder="内网 ZIP / EXE 下载地址" /></label>
           <label class="span-2"><span>更新说明</span><textarea id="releaseNote" rows="3">${escapeHtml(updates.releaseNote || "")}</textarea></label>

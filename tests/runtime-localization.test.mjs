@@ -101,7 +101,8 @@ test("admin module chrome is localized in every supported locale", async () => {
     "moduleFeedbackTitle", "moduleFeedbackKicker", "moduleFeedbackDescription",
     "moduleAiTitle", "moduleAiKicker", "moduleAiDescription",
     "moduleDiagnosticsTitle", "moduleDiagnosticsKicker", "moduleDiagnosticsDescription",
-    "moduleSystemTitle", "moduleSystemKicker", "moduleSystemDescription"
+    "moduleSystemTitle", "moduleSystemKicker", "moduleSystemDescription",
+    "versionSummary", "notSpecified", "maintenance", "quickAccess"
   ];
   for (const locale of localeIds) {
     for (const key of keys) {
@@ -111,6 +112,8 @@ test("admin module chrome is localized in every supported locale", async () => {
   }
   assert.match(adminApp, /titleKey:\s*"moduleOverviewTitle"/);
   assert.match(adminApp, /ai-canvas-locale-change[\s\S]*?renderOverview\(\)/);
+  assert.match(adminApp, /localizedVersionSummary\(/);
+  assert.doesNotMatch(adminApp, /<span>当前 \$\{escapeHtml\(updates\.currentVersion/);
 });
 
 test("employee and admin dynamic interface text use a bundled ten-language catalog", async () => {
